@@ -1,12 +1,28 @@
-import { prisma } from "@repo/database";
+"use client";
 
-export default async function IndexPage() {
-  const users = await prisma.user.findMany();
+import { useEffect } from "react";
+import { SignIn, SignInButton, useUser } from "@clerk/nextjs";
+import { useRouter } from "next/navigation";
+
+export default function Home() {
+  const { user, isLoaded } = useUser();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (isLoaded && user) {
+      router.push("/dashboard");
+    }
+  }, [isLoaded, user, router]);
 
   return (
-    <div>
-      <h1>Hello World</h1>
-      <pre>{JSON.stringify(users, null, 2)}</pre>
+    <div className="flex flex-col items-center justify-center h-screen">
+      <h1 className="text-3xl font-bold">Welcome to SHEWorks</h1>
+      <p>Empowering domestic helpers through their skills.</p>
+      <SignInButton>
+        <button className="mt-4 px-4 py-2 bg-green-600 text-white rounded-md">
+          Sign In
+        </button>
+      </SignInButton>
     </div>
   );
 }
