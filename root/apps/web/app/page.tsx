@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import { SignIn, SignInButton, useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
+import { registerIfNot } from "../actions/auth";
 
 export default function Home() {
   const { user, isLoaded } = useUser();
@@ -11,7 +12,9 @@ export default function Home() {
   useEffect(() => {
     if (isLoaded && user) {
       router.push("/dashboard");
-    }
+      console.log(user.id)
+      registerIfNot(user.id , user.fullName , user.phoneNumbers[0].phoneNumber , user.emailAddresses[0].emailAddress)
+    } 
   }, [isLoaded, user, router]);
 
   return (

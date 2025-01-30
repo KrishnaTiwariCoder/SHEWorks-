@@ -1,68 +1,119 @@
-"use client";
+"use client"
+import React from 'react';
+import { Layout } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+// import { Card, CardContent } from '@repo/components/ui/card';
 
-import { useUser } from "@clerk/nextjs";
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { SignOutButton } from "@clerk/nextjs";
-
-export default function Dashboard() {
-  const { user, isLoaded } = useUser();
+const Dashboard = () => {
   const router = useRouter();
-  useEffect(() => {
-    if (isLoaded && !user) {
-      router.push("/"); // Redirect to sign-in if user is not logged in
-    } else if (user) {
-    }
-  }, [user, isLoaded, router]);
-
-  if (!isLoaded) return <div>Loading...</div>;
   return (
-    <div className="flex h-screen bg-gray-100">
-      {/* Sidebar */}
-      <aside className="w-64 bg-white shadow-lg">
-        <div className="p-5 text-xl font-semibold">SHEWorks</div>
-        <nav className="mt-4">
-          <ul>
-            <li className="p-3 hover:bg-gray-200 cursor-pointer">
-              📊 Dashboard
-            </li>
-            <li className="p-3 hover:bg-gray-200 cursor-pointer">🛍 Orders</li>
-            <li className="p-3 hover:bg-gray-200 cursor-pointer">👤 Profile</li>
-            <li className="p-3 hover:bg-gray-200 cursor-pointer">
-              ⚙️ Settings
-            </li>
-          </ul>
-        </nav>
-      </aside>
+    <div className="min-h-screen bg-slate-900 text-slate-100 font-sans">
+      {/* Main Content Area */}
+      <div className="p-6">
+        <header className="mb-8">
+          <h1 className="text-3xl font-bold text-slate-100 mb-2">Dashboard</h1>
+          <p className="text-slate-400">Welcome to your dashboard overview</p>
+        </header>
 
-      {/* Main Content */}
-      <main className="flex-1 p-6">
-        {/* Header */}
-        <div className="flex justify-between items-center bg-white p-4 rounded-lg shadow">
-          <h1 className="text-2xl font-bold">Welcome to Dashboard</h1>
-          <SignOutButton>
-            <button className="px-4 py-2 bg-blue-500 text-white rounded">
-              Logout
-            </button>
-          </SignOutButton>
+        {/* Dashboard Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+          {/* Stats Cards */}
+          <div className="bg-slate-800 border-slate-700">
+            <div className="p-6">
+              <h3 className="text-lg font-semibold text-slate-100 mb-2">Total Revenue</h3>
+              <p className="text-3xl font-bold text-emerald-400">$24,345</p>
+              <p className="text-sm text-slate-400 mt-2">+12% from last month</p>
+            </div>
+          </div>
+
+          <div className="bg-slate-800 border-slate-700">
+            <div className="p-6">
+              <h3 className="text-lg font-semibold text-slate-100 mb-2">Active Users</h3>
+              <p className="text-3xl font-bold text-blue-400">1,234</p>
+              <p className="text-sm text-slate-400 mt-2">+5% from last week</p>
+            </div>
+          </div>
+
+          <div className="bg-slate-800 border-slate-700">
+            <div className="p-6">
+              <h3 className="text-lg font-semibold text-slate-100 mb-2">Pending Orders</h3>
+              <p className="text-3xl font-bold text-orange-400">45</p>
+              <p className="text-sm text-slate-400 mt-2">3 require attention</p>
+            </div>
+          </div>
         </div>
 
-        {/* Stats Section */}
-        <div className="grid grid-cols-3 gap-6 mt-6">
-          <div className="p-4 bg-white shadow rounded-lg">
-            <h2 className="text-lg font-semibold">🛒 Total Orders</h2>
-            <p className="text-2xl font-bold">120</p>
-          </div>
-          <div className="p-4 bg-white shadow rounded-lg">
-            <h2 className="text-lg font-semibold">💰 Earnings</h2>
-            <p className="text-2xl font-bold">$5,400</p>
-          </div>
-          <div className="p-4 bg-white shadow rounded-lg">
-            <h2 className="text-lg font-semibold">⭐ Reviews</h2>
-            <p className="text-2xl font-bold">4.8/5</p>
+        {/* Recent Activity Section */}
+        <div className="bg-slate-800 border-slate-700 mb-8">
+          <div className="p-6">
+            <h2 className="text-xl font-bold text-slate-100 mb-4">Recent Activity</h2>
+            <div className="space-y-4">
+              {[
+                { title: 'New order received', time: '2 minutes ago', status: 'pending' },
+                { title: 'Payment processed', time: '1 hour ago', status: 'completed' },
+                { title: 'Customer support ticket', time: '3 hours ago', status: 'active' },
+              ].map((activity, index) => (
+                <div key={index} className="flex items-center justify-between py-2 border-b border-slate-700">
+                  <div>
+                    <p className="text-slate-100">{activity.title}</p>
+                    <p className="text-sm text-slate-400">{activity.time}</p>
+                  </div>
+                  <span className={`px-3 py-1 rounded-full text-sm ${
+                    activity.status === 'completed' ? 'bg-emerald-900 text-emerald-200' :
+                    activity.status === 'pending' ? 'bg-orange-900 text-orange-200' :
+                    'bg-blue-900 text-blue-200'
+                  }`}>
+                    {activity.status}
+                  </span>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
-      </main>
+      </div>
+
+      {/* Footer */}
+      <footer className="bg-slate-800 border-t border-slate-700 mt-auto">
+        <div className="max-w-7xl mx-auto px-6 py-8">
+          <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
+            <div className="flex items-center space-x-2">
+              <Layout className="h-6 w-6 text-slate-400" />
+              <span className="text-slate-100 font-semibold">Dashboard</span>
+            </div>
+            <nav>
+              <ul className="flex space-x-6">
+                <li>
+                  <button onClick={()=> router.push("/dashboard/help")} className="text-slate-400 hover:text-slate-100 transition-colors">
+                    Get Help
+                  </button>
+                </li>
+                <li>
+                  <button onClick={()=> router.push("/dashboard/transactions")} className="text-slate-400 hover:text-slate-100 transition-colors">
+                    Transactions
+                  </button>
+                </li>
+                <li>
+                  <button onClick={()=> router.push("/dashboard/recent-activity")} className="text-slate-400 hover:text-slate-100 transition-colors">
+                    Recent Activity
+                  </button>
+                </li>
+                <li>
+                  <button onClick={()=> router.push("/dashboard/orders")} className="text-slate-400 hover:text-slate-100 transition-colors">
+                    Orders
+                  </button>
+                </li>
+                <li>
+                  <button onClick={()=> router.push("/dashboard/services")} className="text-slate-400 hover:text-slate-100 transition-colors">
+                    Services
+                  </button>
+                </li>
+              </ul>
+            </nav>
+          </div>
+        </div>
+      </footer>
     </div>
   );
-}
+};
+
+export default Dashboard
